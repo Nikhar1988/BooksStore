@@ -4,10 +4,10 @@ import './book-list-item.css';
 const BookListItem = ({ book }) => {
   const { title, author } = book;
   return (
-    <Fragment>
+    <div className="book-list item">
       <span>{title}</span>
       <span>{author}</span>
-    </Fragment>
+    </div>
   );
 };
 
