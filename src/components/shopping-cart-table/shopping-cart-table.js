@@ -7,11 +7,14 @@ const ShoppingCartTable = () => {
       <h2>Your Order</h2>
       <table className="table">
         <thead>
-          <th>#</th>
-          <th>Item</th>
-          <th>Count</th>
-          <th>Price</th>
-          <th>Action</th>
+          <tr>
+            <th>#</th>
+            <th>Item</th>
+            <th>Count</th>
+            <th>Price</th>
+            <th>Action</th>
+          </tr>
+
         </thead>
 
         <tbody>
