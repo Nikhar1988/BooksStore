@@ -9,7 +9,7 @@ class BookList extends Component {
     render () {
         const {books} = this.props;
         console.log(books)
-     
+      
         return (
             <ul>
               {
@@ -23,6 +23,9 @@ class BookList extends Component {
           );
     } 
 }
+
+
+  
 
 const mapStateToProps = (state) => {
     return {
