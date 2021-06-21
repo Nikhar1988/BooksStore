@@ -6,6 +6,13 @@ const booksLoaded = (newBooks) => {
   };
 };
 
+const bookRequested = () => {
+  return {
+    type: 'BOOK_REQUESTED'
+  };
+};
+
 export {
-  booksLoaded
+  booksLoaded,
+  bookRequested
 };
