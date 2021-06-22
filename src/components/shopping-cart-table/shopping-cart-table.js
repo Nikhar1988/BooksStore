@@ -8,13 +8,13 @@ const ShoppingCartTable = ({ items, total, onDecreace, onIncreace, onDelite }) =
     const { id, name, count, total } = item;
     return (
       <tr key={id}>
-        <td>{idx}</td>
+        <td>{idx + 1}</td>
         <td>{name}</td>
         <td>{count}</td>
         <td>${total}</td>
         <td>
           <button
-            onClick={() => onDecreace(id)}
+            onClick={() => onDelite(id)}
             className="btn btn-outline-danger btn-sm float-right">
             <i className="fa fa-trash-o" />
           </button>
@@ -24,7 +24,7 @@ const ShoppingCartTable = ({ items, total, onDecreace, onIncreace, onDelite }) =
             <i className="fa fa-plus-circle" />
           </button>
           <button
-            onClick={() => onDelite(id)}
+            onClick={() => onDecreace(id)}
             className="btn btn-outline-warning btn-sm float-right">
             <i className="fa fa-minus-circle" />
           </button>
@@ -67,9 +67,17 @@ const mapStateToProps = ({ cartItems, orderTotal }) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = () => {
   return {
-
+      onDecreace: (id) => {
+        console.log(`decrease ${id}`)
+      },
+      onIncreace:(id) => {
+        console.log(`increase ${id}`)
+      },
+      onDelite: (id) => {
+        console.log(`delite ${id}`)
+      }
   }
 
 }

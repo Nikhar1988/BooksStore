@@ -46,6 +46,10 @@ const reducer = (state = initialState, action) => {
         loading: false,
         error: action.payload
       };
+      case 'BOOK_ADDED_TO_CART':
+        return {
+          
+        }
 
     default:
       return state;
