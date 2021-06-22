@@ -8,7 +8,7 @@ const booksLoaded = (newBooks) => {
 
 const bookRequested = () => {
   return {
-    type: 'FETCH_BOOKS_REQUEST'
+    type: 'FETCH_BOOK_REQUEST'
   };
 };
 const bookError = (error) => {
@@ -18,11 +18,11 @@ const bookError = (error) => {
   };
 };
 
-const fetchBooks =(bookstoreService, dispatch)=> () => {
-  dispatch(bookRequested()); 
+const fetchBooks = (bookstoreService, dispatch) => () => {
+  dispatch(bookRequested());
   bookstoreService.getBooks()
-  .then((data) => dispatch(booksLoaded(data)))
-  .catch((error) => dispatch(bookError(error)));
+    .then((data) => dispatch(booksLoaded(data)))
+    .catch((error) => dispatch(bookError(error)));
 }
 
 export {

@@ -1,7 +1,38 @@
 import React from 'react';
 import './shopping-cart-table.css';
+import { connect } from 'react-redux';
+import { compose } from '../../utils';
 
-const ShoppingCartTable = () => {
+const ShoppingCartTable = ({ items, total, onDecreace, onIncreace, onDelite }) => {
+  const renderRow = (item, idx) => {
+    const { id, name, count, total } = item;
+    return (
+      <tr key={id}>
+        <td>{idx}</td>
+        <td>{name}</td>
+        <td>{count}</td>
+        <td>${total}</td>
+        <td>
+          <button
+            onClick={() => onDecreace(id)}
+            className="btn btn-outline-danger btn-sm float-right">
+            <i className="fa fa-trash-o" />
+          </button>
+          <button
+            onClick={() => onIncreace(id)}
+            className="btn btn-outline-success btn-sm float-right">
+            <i className="fa fa-plus-circle" />
+          </button>
+          <button
+            onClick={() => onDelite(id)}
+            className="btn btn-outline-warning btn-sm float-right">
+            <i className="fa fa-minus-circle" />
+          </button>
+        </td>
+      </tr>
+    )
+  }
+
   return (
     <div className="shopping-cart-table">
       <h2>Your Order</h2>
@@ -18,31 +49,29 @@ const ShoppingCartTable = () => {
         </thead>
 
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Site Reliability Engineering</td>
-            <td>2</td>
-            <td>$40</td>
-            <td>
-              <button className="btn btn-outline-danger btn-sm float-right">
-                <i className="fa fa-trash-o" />
-              </button>
-              <button className="btn btn-outline-success btn-sm float-right">
-                <i className="fa fa-plus-circle" />
-              </button>
-              <button className="btn btn-outline-warning btn-sm float-right">
-                <i className="fa fa-minus-circle" />
-              </button>
-            </td>
-          </tr>
+          {items.map(renderRow)}
         </tbody>
       </table>
 
       <div className="total">
-        Total: $201
+        Total: ${total}
       </div>
     </div>
   );
 };
 
-export default ShoppingCartTable;
+const mapStateToProps = ({ cartItems, orderTotal }) => {
+  return {
+    items: cartItems,
+    total: orderTotal
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+  }
+
+}
+
+export default compose(connect(mapStateToProps, mapDispatchToProps))(ShoppingCartTable);
