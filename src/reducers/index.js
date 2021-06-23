@@ -14,7 +14,26 @@ const updateCartItems = (cartItems, item, idx) => {
       item
     ]
   }
+
+  return [
+    ...cartItems.slice(0, idx),
+    item,
+    ...cartItems.slice(idx + 1)
+  ]
 }
+
+const updateCartItem = (book, item = {}) => { //если item undefaind  то тогда сработает пустой объект
+  
+  const {id = book.id, count = 0, title = book.title, total = 0} = item; // если item пустой объект то тогда сработает
+  
+    return { // выполняется если item undefaind т.е. = мы не нашли ниодного элемента с таким индексом
+        id,
+        title,
+        count:count +  1,
+        total:total +  book.price
+      }
+} 
+
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -45,49 +64,21 @@ const reducer = (state = initialState, action) => {
       const bookId = action.payload; //передаем id элемента на который нажали
       const book = state.books.find((book) => book.id === bookId); // Метод find() возвращает значение первого найденного в массиве элемента, а элементы в масиве это объекты по соблюдению условия будет возврвщвть нужный объект
       const index = state.cartItems.findIndex( item => item.id === bookId); // findIndex(), который возвращает индекс найденного в массиве элемента вместо его значения. Получаем индекс найденого в массиве элемента
-      console.log(book)
       const item = state.cartItems[index]; // находим элемент по индексу
-      let newItem;
-      if(item) { // получается если мы нашли элемент в массиве и он  не undefaind то тогда мы изменяем этот элемент
-        newItem = {
-          ...item,
-          count: item.count + 1,
-          total: item.total + book.price
-        }
-      } else  {
-         newItem = { // выполняется если item undefaind т.е. = мы не нашли ниодного элемента с таким индексом
-            id: book.id,
-            title: book.title,
-            count: 1,
-            total: book.price
-          }
-        } 
+      const newItem = updateCartItem(book, item);
       
-    if ( index < 0 ) {
-      return { // если у нас нет данного элемента то мы его добавляем
-        ...state,
-        cartItems:  [
-          ...state.cartItems,
-          newItem
-        ]
-      }
-    } else {
       return { // элемент у нас есть мы вырезаем старый и добавляем новый
         ...state,
-        cartItems: [
-          ...state.cartItems.slice(0, index),
-          newItem,
-          ...state.cartItems.slice(index + 1)
-        ]
-      }
-    }
+        cartItems: updateCartItems(state.cartItems, newItem, index)
+      };
+    
       
     
       
 
     default:
       return state;
-  }
+  };
 };
 
 export default reducer;
