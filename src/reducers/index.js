@@ -1,4 +1,3 @@
-
 const initialState = {
   books: [],
   loading: true,
@@ -8,6 +7,15 @@ const initialState = {
 };
 
 const updateCartItems = (cartItems, item, idx) => {
+  if(item.count === 0) {
+    return [
+      ...cartItems.slice(0, idx),
+      ...cartItems.slice(idx + 1)
+    ]
+  }
+  
+  
+  
   if (idx === -1) {
     return [
       ...cartItems,
@@ -22,18 +30,30 @@ const updateCartItems = (cartItems, item, idx) => {
   ]
 }
 
-const updateCartItem = (book, item = {}) => { //если item undefaind  то тогда сработает пустой объект
+const updateCartItem = (book, item = {}, quanity ) => { //если item undefaind  то тогда сработает пустой объект
   
   const {id = book.id, count = 0, title = book.title, total = 0} = item; // если item пустой объект то тогда сработает
   
     return { // выполняется если item undefaind т.е. = мы не нашли ниодного элемента с таким индексом
         id,
         title,
-        count:count +  1,
-        total:total +  book.price
+        count:count +  quanity,
+        total:total +  quanity*book.price
       }
 } 
 
+const bookOrder =( state, bookId, quanity ) => {
+ 
+      const book = state.books.find((book) => book.id === bookId); // Метод find() возвращает значение первого найденного в массиве элемента, а элементы в масиве это объекты по соблюдению условия будет возврвщвть нужный объект
+      const index = state.cartItems.findIndex( item => item.id === bookId); // findIndex(), который возвращает индекс найденного в массиве элемента вместо его значения. Получаем индекс найденого в массиве элемента
+      const item = state.cartItems[index]; // находим элемент по индексу
+      const newItem = updateCartItem(book, item, quanity);
+      
+      return { // элемент у нас есть мы вырезаем старый и добавляем новый
+        ...state,
+        cartItems: updateCartItems(state.cartItems, newItem, index)
+      };
+}
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -60,18 +80,17 @@ const reducer = (state = initialState, action) => {
         loading: false,
         error: action.payload
       };
-      case 'BOOK_ADDED_TO_CART':
-      const bookId = action.payload; //передаем id элемента на который нажали
-      const book = state.books.find((book) => book.id === bookId); // Метод find() возвращает значение первого найденного в массиве элемента, а элементы в масиве это объекты по соблюдению условия будет возврвщвть нужный объект
-      const index = state.cartItems.findIndex( item => item.id === bookId); // findIndex(), который возвращает индекс найденного в массиве элемента вместо его значения. Получаем индекс найденого в массиве элемента
-      const item = state.cartItems[index]; // находим элемент по индексу
-      const newItem = updateCartItem(book, item);
       
-      return { // элемент у нас есть мы вырезаем старый и добавляем новый
-        ...state,
-        cartItems: updateCartItems(state.cartItems, newItem, index)
-      };
-    
+      case 'BOOK_ADDED_TO_CART':
+        return bookOrder(state,action.payload, 1);
+      
+      case 'BOOK_REMOVE_TO_CART':
+        return bookOrder(state,action.payload, -1);
+      
+      case 'ALL_BOOK_REMOVE_TO_CART':
+          const item = state.cartItems.find(({id})=> id === action.payload)
+        return bookOrder(state, action.payload, -item.count);
+
       
     
       
